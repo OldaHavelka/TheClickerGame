@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Clicker Game</title>
+    </head>
+    <style>
+        *{
+            box-sizing: border-box;
+            font-size:22px;}
+        body{background-color:rgb(121, 180, 161);}
+        a{color:black;}
+        .theClickButton{
+            size:150px, 150px;
+            float:left;
+            padding:45px;
+            margin:20px;
+        }
+        .theClickButtonDiv{
+            width:20%;
+        }
+        .buyClickers{
+            float:right;
+            width:80%;
+        }
+        .clickers{
+            line-height: 35px;
+        }
+        .aClicker{
+            padding:10px;
+            vertical-align: middle;
+        }
+        .buyClickerButton{
+            width:180px;
+        }
+    </style>
+    <body>
+        <div class="numberOfClicks">
+            <a>Clicks: </a><a id="numberOfClicks">0</a>
+        </div>
+        <div class="theClickButtonDiv">
+            <button class="theClickButton" id="theClickButton">Click!</button>
+        </div>
+        <div class="buyClickers" id="buyClickers">
+            <p>Buy clickers:</p>
+            <div class="clickers" id="clickers">
+                <!--<a class="aClicker"><button id="clicker0" name="0">Worker</button><a id="clicker0Ammount">0</a><a> units clicking </a><a id="clicker0CPS">0</a><a> CPS, next units costs </a><a id="clicker0Cost">0</a><a> clicks.</a></a><br /> -->
+            </div>
+        </div>
+    </body>
+    <script>
+        var tickSpeed = 50;
+        var tickClicks = setInterval(updateClicks, tickSpeed);
+        var tickShop = setInterval(updateShop, tickSpeed*20);
+        var clicks = 0;
+        //  clickerVariables = [[ammountOfClickers, clicksPerSecondPerClicker, baseCost, costMultiplier, clickerName]]
+        var clickerVariables = [[0,0.2,10,1.11, "Lazy clicker"],
+                                [0,1,100,1.22, "Motivated clicker"],
+                                [0,50,1000,1.33, "Efficient clicker"],
+                                [0,100,10000,1.44, "Auto-clicker clicker"],
+                                [0,5000,100000,1.55, "Multi-computer clicker"],
+                                [0,10000,1000000,1.66, "Botnet-abusing clicker"],
+                                [0,500000,10000000,1.77, "God's chosen clicker"],
+                                [0,1000000,100000000,1.88, "Drugs-abusing clicker"],
+                                [0,50000000,1000000000,1.99, "God"],
+                                [0,100000000,10000000000,3, "The One Who Created The Universe"],];
+        var flags = [true,true,true,true,true,true,true,true,true,true];
+
+        document.getElementById("buyClickers").style.display="none";
+
+        document.getElementById('theClickButton').onclick = function(event){
+            clicks+=1;
+        }
+
+        document.getElementById("theClickButton").onmouseup = function(event){
+            this.blur();
+        }
+
+        //  clickerVariables = [[ammountOfClickers, clicksPerSecondPerClicker, baseCost, costMultiplier, clickerName]]
+        function createButton(clickerID){
+            document.getElementById("clickers").innerHTML+=("<a class=\"aClicker\"><button class=\"buyClickerButton\" onmouseover=\"updateButton("+clickerID+")\" id=\""+clickerID+"\">"+clickerVariables[clickerID][4]+"</button><a id=\"clicker"+clickerID+"Ammount\">0</a><a> units clicking </a><a id=\"clicker"+clickerID+"CPS\">0</a><a> CPS, next units costs </a><a id=\"clicker"+clickerID+"Cost\">"+clickerVariables[clickerID][2]+"</a><a> clicks.</a></a><br />");
+        }
+
+        function updateButton(clickerID){
+            document.getElementById(clickerID).onclick = function(event){
+                this.blur();
+                cost=clickerVariables[clickerID][2]*clickerVariables[clickerID][3]**clickerVariables[clickerID][0];
+                if(clicks>=cost){
+                    clicks-=cost;
+                    clickerVariables[clickerID][0]++;
+                    updateClickerVariablesOnDisplay(clickerID);
+                }
+            }
+        }
+        
+
+        //  clickerVariables = [[ammountOfClickers, clicksPerSecondPerClicker, baseCost, costMultiplier]]
+        function updateClickerVariablesOnDisplay(clickerID){
+            document.getElementById("clicker"+clickerID+"Ammount").innerHTML = (clickerVariables[clickerID][0]).toFixed(0);
+            document.getElementById("clicker"+clickerID+"CPS").innerHTML = (clickerVariables[clickerID][0]*clickerVariables[clickerID][1]).toFixed(1);
+            document.getElementById("clicker"+clickerID+"Cost").innerHTML = (clickerVariables[clickerID][2]*clickerVariables[clickerID][3]**clickerVariables[clickerID][0]).toFixed(0);
+        }
+
+        function updateClicks(){
+            for (let index = 0; index < clickerVariables.length; index++) {
+                clicks+=clickerVariables[index][0]*clickerVariables[index][1]/1000*tickSpeed;
+            }
+            document.getElementById("numberOfClicks").innerHTML = clicks.toFixed(0);
+        }
+
+        function updateShop(){
+            switch(true){
+                case(flags[0]):{
+                    if(clicks>=10){
+                        document.getElementById("buyClickers").style.display="block";
+                        createButton(0);
+                        flags[0]=false;
+                    }
+                    break
+                };
+                case(flags[1]):{
+                    if(clicks>=100){
+                        createButton(1);
+                        flags[1]=false;
+                    }
+                    break
+                };
+                case(flags[2]):{
+                    if(clicks>=1000){
+                        createButton(2);
+                        flags[2]=false;
+                    }
+                    break
+                };
+                case(flags[3]):{
+                    if(clicks>=10000){
+                        createButton(3);
+                        flags[3]=false;
+                    }
+                    break
+                };
+                case(flags[4]):{
+                    if(clicks>=100000){
+                        createButton(4);
+                        flags[4]=false;
+                    }
+                    break
+                };
+                case(flags[5]):{
+                    if(clicks>=1000000){
+                        createButton(5);
+                        flags[5]=false;
+                    }
+                    break
+                };
+                case(flags[6]):{
+                    if(clicks>=10000000){
+                        createButton(6);
+                        flags[6]=false;
+                    }
+                    break
+                };
+                case(flags[7]):{
+                    if(clicks>=100000000){
+                        createButton(7);
+                        flags[7]=false;
+                    }
+                    break
+                };
+                case(flags[8]):{
+                    if(clicks>=1000000000){
+                        createButton(8);
+                        flags[8]=false;
+                    }
+                    break
+                };
+                case(flags[9]):{
+                    if(clicks>=10000000000){
+                        createButton(9);
+                        flags[9]=false;
+                    }
+                    break
+                };
+                default:{clearInterval(tickShop);}
+            }
+        }
+    </script>
+</html>
